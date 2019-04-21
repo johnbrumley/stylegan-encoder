@@ -75,7 +75,7 @@ class PerceptualModel:
 
         # test out ADAM with no LR sched/decay
         optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-        session.run(tf.variables_initializer(optimizer.variables()))
+        self.sess.run(tf.variables_initializer(optimizer.variables()))
 
         # or use wd version of Adam
         # weight_decay = 0.3
