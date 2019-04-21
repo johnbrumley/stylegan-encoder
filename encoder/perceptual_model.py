@@ -68,18 +68,18 @@ class PerceptualModel:
         self.sess.run(tf.assign(self.features_weight, weight_mask))
         self.sess.run(tf.assign(self.ref_img_features, image_features))
 
-    def optimize(self, vars_to_optimize, iterations=500, learning_rate=1.):
+    def optimize(self, vars_to_optimize, iterations=500, learning_rate=1., weight_decay=0.3):
 
         vars_to_optimize = vars_to_optimize if isinstance(vars_to_optimize, list) else [vars_to_optimize]
         # optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 
         # test out ADAM with no LR sched/decay
-        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+        # optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
         
 
         # or use wd version of Adam
         # weight_decay = 0.3
-        # optimizer = tf.contrib.opt.AdamWOptimizer(weight_decay=weight_decay,learning_rate=learning_rate)
+        optimizer = tf.contrib.opt.AdamWOptimizer(weight_decay=weight_decay,learning_rate=learning_rate)
 
         min_op = optimizer.minimize(self.loss, var_list=[vars_to_optimize])
 

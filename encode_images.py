@@ -30,6 +30,7 @@ def main():
     # Perceptual model params
     parser.add_argument('--image_size', default=256, help='Size of images for perceptual model', type=int)
     parser.add_argument('--lr', default=1., help='Learning rate for perceptual model', type=float)
+    parser.add_argument('--wd', default=0.3, help='weight decay for perceptual model (AdamW)', type=float)
     parser.add_argument('--iterations', default=1000, help='Number of optimization steps for each batch', type=int)
 
     # Generator params
@@ -59,7 +60,7 @@ def main():
         names = [os.path.splitext(os.path.basename(x))[0] for x in images_batch]
 
         perceptual_model.set_reference_images(images_batch)
-        op = perceptual_model.optimize(generator.dlatent_variable, iterations=args.iterations, learning_rate=args.lr)
+        op = perceptual_model.optimize(generator.dlatent_variable, iterations=args.iterations, learning_rate=args.lr, weight_decay=args.wd)
         pbar = tqdm(op, leave=False, total=args.iterations)
         for loss in pbar:
             pbar.set_description(' '.join(names)+' Loss: %.2f' % loss)
