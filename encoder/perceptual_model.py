@@ -83,7 +83,7 @@ class PerceptualModel:
 
         min_op = optimizer.minimize(self.loss, var_list=[vars_to_optimize])
 
-        self.sess.run(tf.variables_initializer(min_op.variables()))
+        self.sess.run(tf.variables_initializer(optimizer.variables()))
 
         # have to re-init vars here since Adam or else problems
         # self.sess.run([tf.global_variables_initializer(),self.features_weight.initializer, self.features_weight.initializer])
