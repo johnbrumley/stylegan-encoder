@@ -69,6 +69,7 @@ class PerceptualModel:
         self.sess.run(tf.assign(self.ref_img_features, image_features))
 
     def optimize(self, vars_to_optimize, iterations=500, learning_rate=1.):
+        
         vars_to_optimize = vars_to_optimize if isinstance(vars_to_optimize, list) else [vars_to_optimize]
         # optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 
@@ -82,8 +83,8 @@ class PerceptualModel:
 
         # have to re-init vars here since Adam or else problems
         init=tf.global_variables_initializer()
-        
+
         for _ in range(iterations):
-            _, loss = self.sess.run([min_op, self.loss])
+            _, loss = self.sess.run([init, min_op, self.loss])
             yield loss
 
