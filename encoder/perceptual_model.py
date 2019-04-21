@@ -77,6 +77,8 @@ class PerceptualModel:
         # or use wd version of Adam
         weight_decay = 0.3
         optimizer = tf.contrib.opt.AdamWOptimizer(weight_decay=weight_decay,learning_rate=learning_rate)
+        # have to re-init vars here since Adam or else problems
+        init=tf.global_variables_initializer()
 
         min_op = optimizer.minimize(self.loss, var_list=[vars_to_optimize])
         for _ in range(iterations):
