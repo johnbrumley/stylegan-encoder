@@ -41,7 +41,7 @@ class PerceptualModel:
                                                 dtype='float32', initializer=tf.initializers.zeros())
         self.features_weight = tf.get_variable('features_weight', shape=generated_img_features.shape,
                                                dtype='float32', initializer=tf.initializers.zeros())
-        self.sess.run([self.features_weight.initializer, self.features_weight.initializer])
+        # self.sess.run([self.features_weight.initializer, self.features_weight.initializer])
 
         self.loss = tf.losses.mean_squared_error(self.features_weight * self.ref_img_features,
                                                  self.features_weight * generated_img_features) / 82890.0
@@ -74,15 +74,15 @@ class PerceptualModel:
         # optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
 
         # test out ADAM with no LR sched/decay
-        # optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
         # or use wd version of Adam
-        weight_decay = 0.3
-        optimizer = tf.contrib.opt.AdamWOptimizer(weight_decay=weight_decay,learning_rate=learning_rate)
+        # weight_decay = 0.3
+        # optimizer = tf.contrib.opt.AdamWOptimizer(weight_decay=weight_decay,learning_rate=learning_rate)
 
         min_op = optimizer.minimize(self.loss, var_list=[vars_to_optimize])
 
         # have to re-init vars here since Adam or else problems
-        self.sess.run(tf.global_variables_initializer())
+        self.sess.run([tf.global_variables_initializer(),self.features_weight.initializer, self.features_weight.initializer])
 
         for _ in range(iterations):
             _, loss = self.sess.run([min_op, self.loss])
