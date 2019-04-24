@@ -64,7 +64,7 @@ image_size = 256
 lr = 0.05
 iterations = 150
 wd = 0.005
-randomize_noise = False # also test with true to see if any better
+randomize_noise = True # also test with true to see if any better
 
 os.makedirs(generated_images_dir, exist_ok=True)
 os.makedirs(dlatent_dir, exist_ok=True)
@@ -124,7 +124,7 @@ def make_video(name, imgs, fps=24, res=1024, lib='cv', width=1024, height=1024):
     return
   
 def write_cv(imgs, name, fps, width=768, height=1366):
-    fourcc = VideoWriter_fourcc(*'PIM1') # other codecs MJPG (yes) MP4V (no) H264 (no) X264 (no) PIM1 (yes)
+    fourcc = VideoWriter_fourcc(*'MJPG') # other codecs MJPG (yes) MP4V (no) H264 (no) X264 (no) PIM1 (yes)
     video = VideoWriter(name, fourcc, float(fps), (width, height), True)
     [video.write(cv2.cvtColor(img, cv2.COLOR_RGB2BGR)) for img in imgs]
     video.release()    
