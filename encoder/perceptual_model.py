@@ -45,16 +45,16 @@ class PerceptualModel:
 
         # Tried some other initializers, no noticeable improvement :(
 
-        self.ref_img_features = tf.get_variable('ref_img_features', shape=generated_img_features.shape,
-                                                dtype='float32', initializer=tf.initializers.zeros())
-        self.features_weight = tf.get_variable('features_weight', shape=generated_img_features.shape,
-                                               dtype='float32', initializer=tf.initializers.zeros())
-
         # self.ref_img_features = tf.get_variable('ref_img_features', shape=generated_img_features.shape,
         #                                         dtype='float32', initializer=tf.initializers.zeros())
         # self.features_weight = tf.get_variable('features_weight', shape=generated_img_features.shape,
-        #                                        dtype='float32', initializer=tf.initializers.glorot_uniform())                                       
-        # self.sess.run([self.features_weight.initializer, self.features_weight.initializer])
+        #                                        dtype='float32', initializer=tf.initializers.zeros())
+
+        self.ref_img_features = tf.get_variable('ref_img_features', shape=generated_img_features.shape,
+                                                dtype='float32', initializer=tf.initializers.he_uniform())
+        self.features_weight = tf.get_variable('features_weight', shape=generated_img_features.shape,
+                                               dtype='float32', initializer=tf.initializers.he_uniform())                                       
+        self.sess.run([self.features_weight.initializer, self.features_weight.initializer])
 
         self.loss = tf.losses.mean_squared_error(self.features_weight * self.ref_img_features,
                                                  self.features_weight * generated_img_features) / 82890.0
