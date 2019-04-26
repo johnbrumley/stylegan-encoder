@@ -42,8 +42,9 @@ class PerceptualModel:
         generated_image = preprocess_input(tf.image.resize_images(generated_image_tensor,
                                                                   (self.img_size, self.img_size), method=1))
         generated_img_features = self.perceptual_model(generated_image)
+        print("internal feature shape:",generated_img_features.shape)
 
-        # Tried some other initializers, no noticeable improvement :(
+        # Tried some other initializers, slight improvement over zeros, though could be just rnd noise
 
         # self.ref_img_features = tf.get_variable('ref_img_features', shape=generated_img_features.shape,
         #                                         dtype='float32', initializer=tf.initializers.zeros())
@@ -53,11 +54,14 @@ class PerceptualModel:
         self.ref_img_features = tf.get_variable('ref_img_features', shape=generated_img_features.shape,
                                                 dtype='float32', initializer=tf.initializers.he_uniform())
         self.features_weight = tf.get_variable('features_weight', shape=generated_img_features.shape,
-                                               dtype='float32', initializer=tf.initializers.he_uniform())                                       
+                                               dtype='float32', initializer=tf.initializers.he_uniform())  
+
         self.sess.run([self.features_weight.initializer, self.features_weight.initializer])
 
         self.loss = tf.losses.mean_squared_error(self.features_weight * self.ref_img_features,
                                                  self.features_weight * generated_img_features) / 82890.0
+
+
         self.features_weight_placeholder = tf.placeholder(self.features_weight.dtype, shape=self.features_weight.get_shape())
         self.img_features_placeholder = tf.placeholder(self.ref_img_features.dtype, shape=self.ref_img_features.get_shape())
 
